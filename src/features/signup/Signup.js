@@ -1,7 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useMutation } from "react-query";
 
+import { useAuth } from "../../state";
+import mutations from "../../api/mutations";
 import HeaderHome from "../header/HeaderHome";
 
 const Wrapper = styled.div`
@@ -34,20 +39,33 @@ const Form = styled.form`
   justify-content: center;
   border-radius: 4px;
 `;
-
+const ErrorMessage = styled.div`
+  margin-bottom: 0.25rem;
+  font-size: 12px;
+  padding: 9px 0px 7px 8px;
+  border-radius: 4px;
+  outline: none;
+  color: red;
+`;
 const Label = styled.label`
   margin-bottom: 0.5rem;
 `;
 const Input = styled.input`
-  font-size: 16px;
-  margin-bottom: 1rem;
-  padding: 5px;
-  border-radius: 2px;
+  font-size: 14px;
   outline: none;
+  margin-bottom: 1rem;
+  padding: 10px;
+  border-radius: 2px;
   border: 0.5px solid #d5d5dd;
   color: #d5d5dd;
-`;
 
+  ${({ error }) =>
+    error &&
+    `
+      border: 1px solid red;
+      color: red;
+    `}
+`;
 const Button = styled.button`
   background-color: #ee1144;
   margin-bottom: 2rem;
@@ -59,11 +77,49 @@ const Button = styled.button`
   cursor: pointer;
   padding: 5px;
 `;
+const validationSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Invalid email!")
+    .required("Email is required field"),
+  password: Yup.string()
+    .min(2, "Password is too short!")
+    .max(50, "Password is too long!")
+    .required("Password is required field!"),
+});
+
 function Signup() {
+  const history = useHistory();
+  const setIsLoggedIn = useAuth((state) => state.setIsLoggedIn);
+
+  const signupMutation = useMutation(mutations.signup, {
+    onSuccess: (data) => {
+      setIsLoggedIn(true, data.data.token);
+      history.push("/");
+    },
+  });
+
+  async function onSubmit(values) {
+    try {
+      signupMutation.mutate(values);
+    } catch (err) {
+      if (err.response.data.exception === "EmailAllreadyInUseException") {
+        formik.setErrors({ email: "Email already in use!" });
+      }
+    }
+  }
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    onSubmit,
+    validationSchema,
+  });
   return (
     <Wrapper>
       <HeaderHome />
-      <Form>
+      <Form onSubmit={formik.handleSubmit}>
         <Title>Sign up</Title>
         <Description>
           Already have an account?{" "}
@@ -72,10 +128,29 @@ function Signup() {
           </Link>
         </Description>
         <Label>E-mail</Label>
-        <Input placeholder="E-mail" />
+        <Input
+          placeholder="E-mail"
+          name="email"
+          onChange={formik.handleChange}
+          value={formik.values.email}
+          error={formik.errors.email && formik.touched.email}
+        />
+        {formik.errors.email ? (
+          <ErrorMessage>{formik.errors.email}</ErrorMessage>
+        ) : null}
         <Label>Password</Label>
-        <Input placeholder="Password" />
-        <Button>Sign up</Button>
+        <Input
+          placeholder="Password"
+          name="password"
+          onChange={formik.handleChange}
+          value={formik.values.password}
+          type="password"
+          autoComplete="off"
+        />
+        {formik.errors.password ? (
+          <ErrorMessage>{formik.errors.password}</ErrorMessage>
+        ) : null}
+        <Button type="submit">Sign up</Button>
       </Form>
     </Wrapper>
   );

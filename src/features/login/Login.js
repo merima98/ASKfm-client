@@ -39,10 +39,10 @@ const Label = styled.label`
   margin-bottom: 0.5rem;
 `;
 const Input = styled.input`
-  font-size: 16px;
+  font-size: 14px;
   outline: none;
   margin-bottom: 1rem;
-  padding: 5px;
+  padding: 10px;
   border-radius: 2px;
   border: 0.5px solid #d5d5dd;
   color: #d5d5dd;
