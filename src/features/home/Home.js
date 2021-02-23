@@ -15,7 +15,7 @@ const Form = styled.div`
   grid-template-rows: repeat(2, 1fr);
 
   @media (min-width: ${BREAKPOINTS.SMALL_DEVICES}) {
-    width: 40%;
+    width: 30%;
   }
 `;
 const Logo = styled.div`
