@@ -6,6 +6,7 @@ import {
   LOGGED_IN_DEFAULT_LAYOUT_ROUTES,
   LOGGED_OUT_NO_LAYOUT_ROUTES,
 } from "./routing/routes";
+import GlobalStyle from "./globalStyles.js";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,7 @@ function App() {
   );
   return (
     <QueryClientProvider client={queryClient}>
+      <GlobalStyle />
       <BrowserRouter>
         {isLoggedIn && (
           <Switch>
