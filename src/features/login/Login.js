@@ -1,7 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useMutation } from "react-query";
 
+import { useAuth } from "../../state";
+import mutations from "../../api/mutations";
 import HeaderHome from "../header/HeaderHome";
 
 const Wrapper = styled.div`
@@ -46,6 +51,20 @@ const Input = styled.input`
   border-radius: 2px;
   border: 0.5px solid #d5d5dd;
   color: #d5d5dd;
+  ${({ error }) =>
+    error &&
+    `
+      border: 1px solid red;
+      color: red;
+    `}
+`;
+const ErrorMessage = styled.div`
+  margin-bottom: 0.25rem;
+  font-size: 12px;
+  padding: 9px 0px 7px 8px;
+  border-radius: 4px;
+  outline: none;
+  color: red;
 `;
 
 const Button = styled.button`
@@ -60,23 +79,83 @@ const Button = styled.button`
   padding: 5px;
 `;
 
+const validationSchema = Yup.object().shape({
+  username: Yup.string()
+    .min(2, "Too short!")
+    .max(50, "Too long!")
+    .required("This field is required!"),
+  password: Yup.string()
+    .min(2, "Password is too short!")
+    .max(50, "Password is too long!")
+    .required("Password is required field!"),
+});
+
 function Login() {
+  const history = useHistory();
+  const setIsLoggedIn = useAuth((state) => state.setIsLoggedIn);
+
+  const loginMutation = useMutation(mutations.signin, {
+    onSuccess: (data) => {
+      setIsLoggedIn(true, data.data.token);
+      history.push("/");
+    },
+  });
+
+  async function onSubmit(values) {
+    try {
+      loginMutation.mutate(values);
+    } catch (err) {
+      if (err.response.data.exception === "UserNotFound") {
+        formik.setErrors({ password: "Username or password is incorrect!" });
+      }
+    }
+  }
+  const formik = useFormik({
+    initialValues: {
+      username: "",
+      password: "",
+    },
+    onSubmit,
+    validationSchema,
+  });
   return (
     <Wrapper>
       <HeaderHome />
-      <Form>
+      <Form onSubmit={formik.handleSubmit}>
         <Title>Log in</Title>
         <Description>
-          Don't have an account yet?{" "}
+          Don't have an account yet?
           <Link exact to="/signup">
             Sign up
           </Link>
         </Description>
         <Label>Login</Label>
-        <Input placeholder="Username or email" />
+        <Input
+          placeholder="Username or email"
+          onChange={formik.handleChange}
+          value={formik.values.username}
+          name="username"
+          error={formik.errors.password && formik.touched.password}
+        />
+        {formik.errors.username ? (
+          <ErrorMessage>{formik.errors.username}</ErrorMessage>
+        ) : null}
         <Label>Password</Label>
-        <Input placeholder="Password" />
-        <Button>Login</Button>
+        <Input
+          placeholder="Password"
+          onChange={formik.handleChange}
+          value={formik.values.password}
+          name="password"
+          type="password"
+          autoComplete="off"
+          error={formik.errors.password && formik.touched.password}
+        />
+        {formik.errors.password ? (
+          <ErrorMessage>{formik.errors.password}</ErrorMessage>
+        ) : null}
+        <Button disabled={!(formik.isValid && formik.dirty)} type="submit">
+          Login
+        </Button>
       </Form>
     </Wrapper>
   );
