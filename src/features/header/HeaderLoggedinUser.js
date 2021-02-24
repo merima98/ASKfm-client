@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { NavLink, useHistory } from "react-router-dom";
-import { User, Sun, LogOut } from "react-feather";
+import { User, LogOut } from "react-feather";
 import { useAuth } from "../../state";
 
 import { BREAKPOINTS } from "../../constants";
@@ -17,10 +17,7 @@ const Wrapper = styled.div`
   text-align: center;
   display: flex;
   justify-content: space-around;
-
-  @media (min-width: ${BREAKPOINTS.SMALL_DEVICES}) {
-    position: static;
-  }
+  margin-bottom: 1rem;
 `;
 const Logo = styled(NavLink)`
   font-weight: bold;
