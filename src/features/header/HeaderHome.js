@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 
 const Wrapper = styled.div`
-  border-bottom: 1px solid #252b2f;
+  border-bottom: 1px solid #12415c;
   position: fixed;
   top: 0;
   left: 0;
