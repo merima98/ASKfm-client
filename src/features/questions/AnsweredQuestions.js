@@ -1,19 +1,19 @@
 import React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
 
 import HeaderLoggedinUser from "../header/HeaderLoggedinUser";
 import NewQuestionForm from "./NewQuestionForm";
 import SingleAnsweredQuestion from "./SingleAnsweredQuestion";
 import { BREAKPOINTS } from "../../constants";
 import queries from "../../api/queries";
+import mutations from "../../api/mutations";
 
 const Container = styled.div`
-  display: grid;
-  grid-template-rows: 1fr 2fr;
   @media (min-width: ${BREAKPOINTS.SMALL_DEVICES}) {
     grid-template-columns: 1fr 2fr;
+    display: grid;
   }
 `;
 const LeftSideContainer = styled.div`
@@ -47,14 +47,93 @@ const Links = styled(NavLink)`
   }
 `;
 const RightSideContainer = styled.div`
-  display: grid;
-  grid-gap: 1rem;
+  @media (min-width: ${BREAKPOINTS.SMALL_DEVICES}) {
+    display: grid;
+    grid-gap: 1rem;
+  }
 `;
 
 function AnsweredQuestions() {
   const { data } = useQuery("questions", () => queries.questions());
   const questions = data ? data.data : [];
 
+  const likeQuestionMutation = useMutation(mutations.likeQuestion, {
+    onSuccess: (data) => {
+      if (!data.data.dislikes && data.data.like) {
+        questions.map((question) => {
+          if (Number(question.id) === Number(data.data.questionId)) {
+            const newLikes = question.likes;
+            newLikes.push(data.data.like);
+            return { ...question, Dislikes: newLikes };
+          }
+          return question;
+        });
+      } else if (data.data.dislikes && data.data.like) {
+        questions.map((question) => {
+          if (Number(question.id) === Number(data.data.questionId)) {
+            const newDislikes = question.likes;
+            newDislikes.push(data.data.dislikes);
+            const newLikes = question.Dislikes;
+            newLikes.pop();
+            return { ...question, Dislikes: newDislikes, likes: newLikes };
+          }
+          return question;
+        });
+      } else {
+        questions.map((question) => {
+          if (Number(question.id) === Number(data.data.questionId)) {
+            const newLikes = question.likes;
+            newLikes.pop();
+            return { ...question, likes: newLikes };
+          }
+          return question;
+        });
+      }
+    },
+  });
+
+  async function handleOnLike(id) {
+    return likeQuestionMutation.mutate(id);
+  }
+
+  const dislikeQuestionMutation = useMutation(mutations.dislikeQuestion, {
+    onSuccess: (data) => {
+      if (data.data.dislikes && !data.data.like) {
+        questions.map((question) => {
+          if (Number(question.id) === Number(data.data.questionId)) {
+            const newLikes = question.Dislikes;
+            newLikes.push(data.data.Dislikes);
+            return { ...question, Dislikes: newLikes };
+          }
+          return question;
+        });
+      } else if (data.data.dislikes && data.data.like) {
+        questions.map((question) => {
+          if (Number(question.id) === Number(data.data.questionId)) {
+            const newDislikes = question.Dislikes;
+            newDislikes.push(data.data.dislikes);
+            const newLikes = question.likes;
+            newLikes.pop();
+            return { ...question, Dislikes: newDislikes, likes: newLikes };
+          }
+          return question;
+        });
+      } else {
+        questions.map((question) => {
+          if (Number(question.id) === Number(data.data.questionId)) {
+            const newLikes = question.Dislikes;
+            newLikes.pop();
+            return { ...question, Dislikes: newLikes };
+          }
+          return question;
+        });
+      }
+    },
+  });
+
+  async function handleOnDislike(id) {
+    return dislikeQuestionMutation.mutate(id);
+  }
   return (
     <div>
       <Container>
@@ -78,11 +157,14 @@ function AnsweredQuestions() {
             <NewQuestionForm />
             <div>
               {questions.map((question) => {
-                console.log(question);
                 return (
                   <SingleAnsweredQuestion
                     key={question.id}
                     question={question.content}
+                    likeCount={question.likes.length}
+                    dislikeCount={question.Dislikes.length}
+                    likeQuestion={() => handleOnLike(question.id)}
+                    dislikeQuestion={() => handleOnDislike(question.id)}
                   />
                 );
               })}

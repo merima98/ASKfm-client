@@ -15,6 +15,7 @@ const Container = styled.div`
 `;
 const Question = styled.span`
   font-weight: bold;
+  overflow-wrap: anywhere;
   padding: 20px;
   color: #fff;
   border-bottom: 1px solid #12415c;
@@ -45,15 +46,28 @@ const StyledMessageSquare = styled(MessageSquare)`
   width: 16px;
   cursor: pointer;
 `;
+const StyledNumber = styled.span`
+  color: #fff;
+  font-size: 12px;
+`;
 
 function SingleAnsweredQuestion(props) {
-  const { question } = props;
+  const { question, likeCount, dislikeCount } = props;
   return (
     <Wrapper>
       <Container>
         <Question>{question}</Question>
+
         <LikeContainer>
-          <StyledThumbsUp /> <StyledThumbsDown /> <StyledMessageSquare />
+          <div>
+            <StyledNumber>{likeCount > 0 && likeCount}</StyledNumber>{" "}
+            <StyledThumbsUp onClick={props.likeQuestion} />
+          </div>{" "}
+          <div>
+            <StyledNumber>{dislikeCount > 0 && dislikeCount}</StyledNumber>{" "}
+            <StyledThumbsDown onClick={props.dislikeQuestion} />
+          </div>
+          <StyledMessageSquare />
         </LikeContainer>
       </Container>
     </Wrapper>
