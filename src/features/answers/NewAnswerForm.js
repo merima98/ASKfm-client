@@ -2,27 +2,27 @@ import React from "react";
 import styled from "styled-components";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useQueryClient, useMutation } from "react-query";
+import { useMutation } from "react-query";
 
-import { BREAKPOINTS } from "../../constants";
 import mutations from "../../api/mutations";
+
+const validationSchema = Yup.object().shape({
+  content: Yup.string()
+    .min(2, "Comment is too short!")
+    .max(250, "Comment is too long, max is 250 characters!")
+    .required("Comment is required!"),
+});
 
 const Wrapper = styled.form`
   padding: 10px;
-  padding-top: 64px;
-  border-bottom: 1px solid #12415c;
   border-top: none;
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
-  margin-bottom: 1rem;
-  @media (min-width: ${BREAKPOINTS.SMALL_DEVICES}) {
-    border-top: 1px solid #12415c;
-    margin-bottom: 0rem;
-  }
 `;
-const TeaxArea = styled.textarea`
-  margin-bottom: 1rem;
-  background-color: #001321;
+
+const Answer = styled.textarea`
+  background-color: #021d2e;
+  border: 1px solid #12415c;
   outline: none;
   color: #fff;
   width: 100%;
@@ -30,6 +30,7 @@ const TeaxArea = styled.textarea`
   overflow-wrap: anywhere;
   border: none;
 `;
+
 const Button = styled.button`
   background-color: #021d2e;
   outline: none;
@@ -40,6 +41,7 @@ const Button = styled.button`
   padding-right: 8px;
   cursor: pointer;
 `;
+
 const ErrorMessage = styled.div`
   margin-bottom: 0.25rem;
   font-size: 12px;
@@ -48,39 +50,37 @@ const ErrorMessage = styled.div`
   outline: none;
   color: red;
 `;
-const validationSchema = Yup.object().shape({
-  content: Yup.string()
-    .min(2, "Content is too short!")
-    .max(250, "Content is too long, max is 250 characters!")
-    .required("This field is required!"),
-});
-function NewQuestionForm() {
+
+function NewAnswerForm(props) {
+  const { id } = props;
+
   const formik = useFormik({
     initialValues: {
       content: "",
+      questionId: id,
     },
     onSubmit,
     validationSchema,
   });
 
-  const queryClient = useQueryClient();
-
-  const createQuestionMutation = useMutation(mutations.createQuestion, {
-    onSuccess: (data) => {
-      return queryClient.invalidateQueries("questions");
-    },
-  });
+  const createAnswerMutation = useMutation(mutations.createAnswer);
 
   async function onSubmit(values) {
     try {
-      createQuestionMutation.mutate(values);
+      createAnswerMutation.mutate(values);
       formik.resetForm();
     } catch (err) {}
   }
   return (
     <Wrapper onSubmit={formik.handleSubmit}>
-      <TeaxArea
-        placeholder="What, when, why...ask"
+      <input
+        name="id"
+        onChange={formik.handleChange}
+        value={formik.values.questionId}
+        hidden
+      />
+      <Answer
+        placeholder="Leave your comment..."
         name="content"
         onChange={formik.handleChange}
         value={formik.values.content}
@@ -88,9 +88,9 @@ function NewQuestionForm() {
       {formik.errors.content ? (
         <ErrorMessage>{formik.errors.content}</ErrorMessage>
       ) : null}
-      <Button type="submit">Ask</Button>
+      <Button type="submit">Answer</Button>
     </Wrapper>
   );
 }
 
-export default NewQuestionForm;
+export default NewAnswerForm;

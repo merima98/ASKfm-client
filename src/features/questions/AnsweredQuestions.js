@@ -160,6 +160,7 @@ function AnsweredQuestions() {
                 return (
                   <SingleAnsweredQuestion
                     key={question.id}
+                    id={question.id}
                     question={question.content}
                     likeCount={question.likes.length}
                     dislikeCount={question.Dislikes.length}

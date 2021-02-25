@@ -12,6 +12,10 @@ function createQuestion(values) {
   return axios.post("/questionAdd", values);
 }
 
+function createAnswer(values) {
+  return axios.post("/answerAdd", values);
+}
+
 function likeQuestion(questionId) {
   return axios.post(`/like?questionId=${questionId}`);
 }
@@ -23,6 +27,7 @@ const exports = {
   signup,
   signin,
   createQuestion,
+  createAnswer,
   likeQuestion,
   dislikeQuestion,
 };

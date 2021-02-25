@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { ThumbsUp, ThumbsDown, MessageSquare } from "react-feather";
+
+import NewAnswerForm from "../answers/NewAnswerForm";
 
 const Wrapper = styled.div`
   width: 90%;
@@ -50,14 +52,24 @@ const StyledNumber = styled.span`
   color: #fff;
   font-size: 12px;
 `;
+const Comment = styled.div`
+  display: ${(props) => (props.visible ? "flex" : "none")};
+  background-color: #021d2e;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  border: 1px solid #12415c;
+`;
 
 function SingleAnsweredQuestion(props) {
-  const { question, likeCount, dislikeCount } = props;
+  const { question, likeCount, dislikeCount, id } = props;
+  const [showComments, setShowComments] = useState(false);
+  function handleShowComment() {
+    setShowComments(!showComments);
+  }
   return (
     <Wrapper>
       <Container>
         <Question>{question}</Question>
-
         <LikeContainer>
           <div>
             <StyledNumber>{likeCount > 0 && likeCount}</StyledNumber>{" "}
@@ -67,9 +79,12 @@ function SingleAnsweredQuestion(props) {
             <StyledNumber>{dislikeCount > 0 && dislikeCount}</StyledNumber>{" "}
             <StyledThumbsDown onClick={props.dislikeQuestion} />
           </div>
-          <StyledMessageSquare />
+          <StyledMessageSquare onClick={() => handleShowComment()} />
         </LikeContainer>
       </Container>
+      <Comment visible={showComments}>
+        <NewAnswerForm id={id} />
+      </Comment>
     </Wrapper>
   );
 }
