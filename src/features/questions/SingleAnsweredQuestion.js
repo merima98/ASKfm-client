@@ -6,7 +6,7 @@ import NewAnswerForm from "../answers/NewAnswerForm";
 import Answers from "../answers/Answers";
 
 const Wrapper = styled.div`
-  width: 90%;
+  width: ${(props) => (props.width === "true" ? "100%" : "90%")};
   margin: 0 auto;
 `;
 const Container = styled.div`
@@ -82,6 +82,7 @@ function SingleAnsweredQuestion(props) {
     id,
     answersCount,
     answers,
+    fullWidth,
   } = props;
 
   const [showComments, setShowComments] = useState(false);
@@ -96,7 +97,7 @@ function SingleAnsweredQuestion(props) {
   }
 
   return (
-    <Wrapper>
+    <Wrapper width={fullWidth.toString()}>
       <Container>
         <Question>{question}</Question>
         <LikeContainer>

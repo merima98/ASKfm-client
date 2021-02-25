@@ -2,37 +2,64 @@ import React from "react";
 import styled from "styled-components";
 import { useQuery, useMutation } from "react-query";
 
-import HeaderLoggedinUser from "../header/HeaderLoggedinUser";
-import NewQuestionForm from "./NewQuestionForm";
-import SingleAnsweredQuestion from "./SingleAnsweredQuestion";
-import { BREAKPOINTS } from "../../constants";
 import queries from "../../api/queries";
 import mutations from "../../api/mutations";
+import { BREAKPOINTS } from "../../constants";
+import HeaderLoggedinUser from "../header/HeaderLoggedinUser";
+import SingleAnsweredQuestion from "../questions/SingleAnsweredQuestion";
 
-import NavidationMenu from "../navigation/NavidationMenu";
-
+const Wrapper = styled.div`
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  padding-top: 64px;
+  grid-gap: 1rem;
+  @media (min-width: ${BREAKPOINTS.SMALL_DEVICES}) {
+    width: 60%;
+  }
+`;
 const Container = styled.div`
-  @media (min-width: ${BREAKPOINTS.SMALL_DEVICES}) {
-    grid-template-columns: 1fr 2fr;
-    display: grid;
-  }
+  background-color: #021d2e;
+  padding: 10px;
+  border: 1px solid #12415c;
+  border-radius: 4px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+`;
+const UserInformation = styled.div`
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+`;
+const UsernameBig = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+`;
+const UsernameSmall = styled.div`
+  font-size: 12px;
+  color: #fff;
 `;
 
-const RightSideContainer = styled.div`
+const Image = styled.img`
+  width: 90%;
+  border-radius: 50%;
   @media (min-width: ${BREAKPOINTS.SMALL_DEVICES}) {
-    display: grid;
-    grid-gap: 1rem;
+    width: 50%;
   }
 `;
+function UserProfile() {
+  const loggedUserQuery = useQuery("loggedUser", () => queries.loggedUser());
+  const loggedUser = loggedUserQuery.data?.data || {};
 
-function AnsweredQuestions() {
-  const { data } = useQuery("questions", () => queries.questions());
-  const questions = data ? data.data : [];
+  const userQuestionQuery = useQuery("userQuestion", () =>
+    queries.userQuestionGet()
+  );
+  const userQuestion = userQuestionQuery.data?.data || [];
 
   const likeQuestionMutation = useMutation(mutations.likeQuestion, {
     onSuccess: (data) => {
       if (!data.data.dislikes && data.data.like) {
-        questions.map((question) => {
+        userQuestion.map((question) => {
           if (Number(question.id) === Number(data.data.questionId)) {
             const newLikes = question.likes;
             newLikes.push(data.data.like);
@@ -41,7 +68,7 @@ function AnsweredQuestions() {
           return question;
         });
       } else if (data.data.dislikes && data.data.like) {
-        questions.map((question) => {
+        userQuestion.map((question) => {
           if (Number(question.id) === Number(data.data.questionId)) {
             const newDislikes = question.likes;
             newDislikes.push(data.data.dislikes);
@@ -52,7 +79,7 @@ function AnsweredQuestions() {
           return question;
         });
       } else {
-        questions.map((question) => {
+        userQuestion.map((question) => {
           if (Number(question.id) === Number(data.data.questionId)) {
             const newLikes = question.likes;
             newLikes.pop();
@@ -71,7 +98,7 @@ function AnsweredQuestions() {
   const dislikeQuestionMutation = useMutation(mutations.dislikeQuestion, {
     onSuccess: (data) => {
       if (data.data.dislikes && !data.data.like) {
-        questions.map((question) => {
+        userQuestion.map((question) => {
           if (Number(question.id) === Number(data.data.questionId)) {
             const newLikes = question.Dislikes;
             newLikes.push(data.data.Dislikes);
@@ -80,7 +107,7 @@ function AnsweredQuestions() {
           return question;
         });
       } else if (data.data.dislikes && data.data.like) {
-        questions.map((question) => {
+        userQuestion.map((question) => {
           if (Number(question.id) === Number(data.data.questionId)) {
             const newDislikes = question.Dislikes;
             newDislikes.push(data.data.dislikes);
@@ -91,7 +118,7 @@ function AnsweredQuestions() {
           return question;
         });
       } else {
-        questions.map((question) => {
+        userQuestion.map((question) => {
           if (Number(question.id) === Number(data.data.questionId)) {
             const newLikes = question.Dislikes;
             newLikes.pop();
@@ -106,37 +133,41 @@ function AnsweredQuestions() {
   async function handleOnDislike(id) {
     return dislikeQuestionMutation.mutate(id);
   }
+
   return (
     <div>
-      <Container>
-        <NavidationMenu />
+      <HeaderLoggedinUser />
+      <Wrapper>
+        <Container>
+          <Image src={`${loggedUser.image}`} />
+          <UserInformation>
+            <UsernameSmall>@{loggedUser.username}</UsernameSmall>
+            <UsernameBig>{loggedUser.username}</UsernameBig>
+          </UserInformation>
+        </Container>
         <div>
-          <HeaderLoggedinUser />
-          <RightSideContainer>
-            <NewQuestionForm />
-            <div>
-              {questions.map((question) => {
-                return (
-                  <SingleAnsweredQuestion
-                    key={question.id}
-                    id={question.id}
-                    question={question.content}
-                    likeCount={question.likes.length}
-                    dislikeCount={question.Dislikes.length}
-                    likeQuestion={() => handleOnLike(question.id)}
-                    dislikeQuestion={() => handleOnDislike(question.id)}
-                    answersCount={question.Answer.length}
-                    answers={question.Answer}
-                    fullWidth={false}
-                  />
-                );
-              })}
-            </div>
-          </RightSideContainer>
+          {userQuestion.map((question) => {
+            return (
+              question.Answer.length > 0 && (
+                <SingleAnsweredQuestion
+                  key={question.id}
+                  id={question.id}
+                  question={question.content}
+                  likeCount={question.likes.length}
+                  dislikeCount={question.Dislikes.length}
+                  likeQuestion={() => handleOnLike(question.id)}
+                  dislikeQuestion={() => handleOnDislike(question.id)}
+                  answersCount={question.Answer.length}
+                  answers={question.Answer}
+                  fullWidth={true}
+                />
+              )
+            );
+          })}
         </div>
-      </Container>
+      </Wrapper>
     </div>
   );
 }
 
-export default AnsweredQuestions;
+export default UserProfile;

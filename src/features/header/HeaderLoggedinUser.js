@@ -2,8 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import { NavLink, useHistory } from "react-router-dom";
 import { User, LogOut } from "react-feather";
+import { useQuery } from "react-query";
 import { useAuth } from "../../state";
 
+import queries from "../../api/queries.js";
 import { BREAKPOINTS } from "../../constants";
 
 const Wrapper = styled.div`
@@ -42,6 +44,19 @@ const StyledLinks = styled.div`
   }
 `;
 
+const StyledNavigationLinks = styled(NavLink)`
+  color: #fff;
+  margin-right: 0.5rem;
+  height: 12px;
+  width: 12px;
+  cursor: pointer;
+  @media (min-width: ${BREAKPOINTS.SMALL_DEVICES}) {
+    margin-right: 1rem;
+    height: 20px;
+    width: 20px;
+  }
+`;
+
 const StyledUser = styled(User)`
   color: #fff;
   margin-right: 0.5rem;
@@ -68,6 +83,8 @@ const StyledLogOut = styled(LogOut)`
 function HeaderLoggedinUser() {
   const history = useHistory();
   const setIsLoggedIn = useAuth((state) => state.setIsLoggedIn);
+  const loggedUserQuery = useQuery("loggedUser", () => queries.loggedUser());
+  const user = loggedUserQuery.data?.data || {};
 
   function logout() {
     const token = null;
@@ -80,9 +97,9 @@ function HeaderLoggedinUser() {
         ASK.me
       </Logo>
       <Container>
-        <StyledLinks>
+        <StyledNavigationLinks exact to={`/user/${user.username}`}>
           <StyledUser />
-        </StyledLinks>
+        </StyledNavigationLinks>
         <StyledLinks>
           <StyledLogOut onClick={() => logout()} />
         </StyledLinks>
