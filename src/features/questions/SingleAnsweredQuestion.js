@@ -83,25 +83,29 @@ function SingleAnsweredQuestion(props) {
     answersCount,
     answers,
   } = props;
+
   const [showComments, setShowComments] = useState(false);
   const [showAnsweredComments, setShowAnsweredComments] = useState(false);
+
   function handleShowComment() {
     setShowComments(!showComments);
   }
+
   function handleShowAnsweredComment() {
     setShowAnsweredComments(!showAnsweredComments);
   }
+
   return (
     <Wrapper>
       <Container>
         <Question>{question}</Question>
         <LikeContainer>
           <div>
-            <StyledNumber>{likeCount > 0 && likeCount}</StyledNumber>{" "}
+            <StyledNumber>{likeCount > 0 && likeCount}</StyledNumber>
             <StyledThumbsUp onClick={props.likeQuestion} />
-          </div>{" "}
+          </div>
           <div>
-            <StyledNumber>{dislikeCount > 0 && dislikeCount}</StyledNumber>{" "}
+            <StyledNumber>{dislikeCount > 0 && dislikeCount}</StyledNumber>
             <StyledThumbsDown onClick={props.dislikeQuestion} />
           </div>
           <StyledMessageSquare onClick={() => handleShowComment()} />
