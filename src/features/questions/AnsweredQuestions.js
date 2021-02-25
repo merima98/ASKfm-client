@@ -166,6 +166,8 @@ function AnsweredQuestions() {
                     dislikeCount={question.Dislikes.length}
                     likeQuestion={() => handleOnLike(question.id)}
                     dislikeQuestion={() => handleOnDislike(question.id)}
+                    answersCount={question.Answer.length}
+                    answers={question.Answer}
                   />
                 );
               })}

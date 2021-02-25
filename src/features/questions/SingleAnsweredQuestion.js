@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { ThumbsUp, ThumbsDown, MessageSquare } from "react-feather";
+import { ThumbsUp, ThumbsDown, MessageSquare, Plus } from "react-feather";
 
 import NewAnswerForm from "../answers/NewAnswerForm";
+import Answers from "../answers/Answers";
 
 const Wrapper = styled.div`
   width: 90%;
@@ -48,6 +49,13 @@ const StyledMessageSquare = styled(MessageSquare)`
   width: 16px;
   cursor: pointer;
 `;
+
+const StyledPlus = styled(Plus)`
+  color: #12415c;
+  height: 16px;
+  width: 16px;
+  cursor: pointer;
+`;
 const StyledNumber = styled.span`
   color: #fff;
   font-size: 12px;
@@ -60,11 +68,28 @@ const Comment = styled.div`
   border: 1px solid #12415c;
 `;
 
+const Comments = styled.div`
+  display: ${(props) => (props.visible ? "flex" : "none")};
+  margin-bottom: 1rem;
+  border-radius: 4px;
+`;
+
 function SingleAnsweredQuestion(props) {
-  const { question, likeCount, dislikeCount, id } = props;
+  const {
+    question,
+    likeCount,
+    dislikeCount,
+    id,
+    answersCount,
+    answers,
+  } = props;
   const [showComments, setShowComments] = useState(false);
+  const [showAnsweredComments, setShowAnsweredComments] = useState(false);
   function handleShowComment() {
     setShowComments(!showComments);
+  }
+  function handleShowAnsweredComment() {
+    setShowAnsweredComments(!showAnsweredComments);
   }
   return (
     <Wrapper>
@@ -80,11 +105,21 @@ function SingleAnsweredQuestion(props) {
             <StyledThumbsDown onClick={props.dislikeQuestion} />
           </div>
           <StyledMessageSquare onClick={() => handleShowComment()} />
+          {answersCount > 0 && (
+            <StyledPlus onClick={() => handleShowAnsweredComment()} />
+          )}
         </LikeContainer>
       </Container>
       <Comment visible={showComments}>
         <NewAnswerForm id={id} />
       </Comment>
+      <Comments visible={showAnsweredComments}>
+        <div>
+          {answers.map((answer) => {
+            return <Answers answer={answer.content} />;
+          })}
+        </div>
+      </Comments>
     </Wrapper>
   );
 }

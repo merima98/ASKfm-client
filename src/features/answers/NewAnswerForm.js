@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useMutation } from "react-query";
+import { useQueryClient, useMutation } from "react-query";
 
 import mutations from "../../api/mutations";
 
@@ -62,8 +62,13 @@ function NewAnswerForm(props) {
     onSubmit,
     validationSchema,
   });
+  const queryClient = useQueryClient();
 
-  const createAnswerMutation = useMutation(mutations.createAnswer);
+  const createAnswerMutation = useMutation(mutations.createAnswer, {
+    onSuccess: (data) => {
+      return queryClient.invalidateQueries("questions");
+    },
+  });
 
   async function onSubmit(values) {
     try {
