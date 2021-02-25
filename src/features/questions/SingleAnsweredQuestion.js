@@ -116,7 +116,9 @@ function SingleAnsweredQuestion(props) {
       <Comments visible={showAnsweredComments}>
         <div>
           {answers.map((answer) => {
-            return <Answers answer={answer.content} />;
+            return (
+              <Answers key={answer.id} answer={answer.content} id={answer.id} />
+            );
           })}
         </div>
       </Comments>
