@@ -48,9 +48,6 @@ function NavidationMenu() {
       <Links exact to="/">
         Hot Questions
       </Links>
-      <Links exact to="/">
-        Popular Questions
-      </Links>
       <Links exact to={`/user/${user.username}`}>
         My Questions
       </Links>
