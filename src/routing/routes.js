@@ -10,6 +10,12 @@ const LOGGED_IN_DEFAULT_LAYOUT_ROUTES = [
     exact: true,
     component: AnsweredQuestions,
   },
+
+  {
+    path: "/latest",
+    exact: false,
+    component: AnsweredQuestions,
+  },
   {
     path: "/user/:username",
     exact: false,

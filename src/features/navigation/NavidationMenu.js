@@ -42,7 +42,7 @@ function NavidationMenu() {
   const user = loggedUserQuery.data?.data || {};
   return (
     <LeftSideContainer>
-      <Links exact to="/">
+      <Links exact to="/latest">
         Latest
       </Links>
       <Links exact to="/">

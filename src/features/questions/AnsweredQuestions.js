@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useQuery, useMutation } from "react-query";
+import { useLocation } from "react-router-dom";
 
 import HeaderLoggedinUser from "../header/HeaderLoggedinUser";
 import NewQuestionForm from "./NewQuestionForm";
@@ -19,6 +20,7 @@ const Container = styled.div`
 `;
 
 const RightSideContainer = styled.div`
+  padding-top: ${(props) => (props.location !== "/" ? "64px" : "0px")};
   @media (min-width: ${BREAKPOINTS.SMALL_DEVICES}) {
     display: grid;
     grid-gap: 1rem;
@@ -28,6 +30,8 @@ const RightSideContainer = styled.div`
 function AnsweredQuestions() {
   const { data } = useQuery("questions", () => queries.questions());
   const questions = data ? data.data : [];
+
+  const location = useLocation();
 
   const likeQuestionMutation = useMutation(mutations.likeQuestion, {
     onSuccess: (data) => {
@@ -112,8 +116,8 @@ function AnsweredQuestions() {
         <NavidationMenu />
         <div>
           <HeaderLoggedinUser />
-          <RightSideContainer>
-            <NewQuestionForm />
+          <RightSideContainer location={location.pathname}>
+            {location.pathname === "/" && <NewQuestionForm />}
             <div>
               {questions.map((question) => {
                 return (
