@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { NavLink, useHistory } from "react-router-dom";
-import { User, LogOut } from "react-feather";
+import { User, LogOut, Sun, Moon } from "react-feather";
 import { useQuery } from "react-query";
 import { useAuth } from "../../state";
 
@@ -80,6 +80,18 @@ const StyledLogOut = styled(LogOut)`
     width: 20px;
   }
 `;
+
+const StyledSun = styled(Sun)`
+  color: #fff;
+  margin-right: 0.5rem;
+  height: 16px;
+  width: 16px;
+  @media (min-width: ${BREAKPOINTS.SMALL_DEVICES}) {
+    margin-right: 1rem;
+    height: 20px;
+    width: 20px;
+  }
+`;
 function HeaderLoggedinUser() {
   const history = useHistory();
   const setIsLoggedIn = useAuth((state) => state.setIsLoggedIn);
@@ -102,6 +114,9 @@ function HeaderLoggedinUser() {
         </StyledNavigationLinks>
         <StyledLinks>
           <StyledLogOut onClick={() => logout()} />
+        </StyledLinks>
+        <StyledLinks>
+          <StyledSun />
         </StyledLinks>
       </Container>
     </Wrapper>
