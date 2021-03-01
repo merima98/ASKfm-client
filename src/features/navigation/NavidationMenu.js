@@ -35,6 +35,11 @@ const Links = styled(NavLink)`
   @media (min-width: ${BREAKPOINTS.SMALL_DEVICES}) {
     margin-bottom: 2rem;
   }
+
+  &.active {
+    color: #ff8c00;
+    font-weight: bold;
+  }
 `;
 
 function NavidationMenu() {
