@@ -3,17 +3,17 @@ import styled from "styled-components";
 import { NavLink, useHistory } from "react-router-dom";
 import { User, LogOut, Sun, Moon } from "react-feather";
 import { useQuery } from "react-query";
-import { useAuth } from "../../state";
+import { useAuth, useDarkMode } from "../../state";
 
 import queries from "../../api/queries.js";
 import { BREAKPOINTS } from "../../constants";
 
 const Wrapper = styled.div`
-  border-bottom: 1px solid #12415c;
+  border-bottom: 1px solid ${(props) => props.theme.colors.border};
   position: fixed;
   top: 0;
   left: 0;
-  background-color: #021d2e;
+  background-color: ${(props) => props.theme.colors.backgroundColor};
   right: 0;
   padding: 10px;
   text-align: center;
@@ -33,7 +33,6 @@ const Container = styled.div`
   display: flex;
 `;
 const StyledLinks = styled.div`
-  color: #fff;
   margin-right: 0.5rem;
   height: 12px;
   width: 12px;
@@ -45,7 +44,6 @@ const StyledLinks = styled.div`
 `;
 
 const StyledNavigationLinks = styled(NavLink)`
-  color: #fff;
   margin-right: 0.5rem;
   height: 12px;
   width: 12px;
@@ -58,7 +56,7 @@ const StyledNavigationLinks = styled(NavLink)`
 `;
 
 const StyledUser = styled(User)`
-  color: #fff;
+  color: ${(props) => props.theme.colors.color};
   margin-right: 0.5rem;
   height: 16px;
   width: 16px;
@@ -70,7 +68,7 @@ const StyledUser = styled(User)`
 `;
 
 const StyledLogOut = styled(LogOut)`
-  color: #fff;
+  color: ${(props) => props.theme.colors.color};
   margin-right: 0.5rem;
   height: 16px;
   width: 16px;
@@ -82,9 +80,23 @@ const StyledLogOut = styled(LogOut)`
 `;
 
 const StyledSun = styled(Sun)`
-  color: #fff;
+  color: ${(props) => props.theme.colors.color};
   margin-right: 0.5rem;
   height: 16px;
+  width: 16px;
+  cursor: pointer;
+  @media (min-width: ${BREAKPOINTS.SMALL_DEVICES}) {
+    margin-right: 1rem;
+    height: 20px;
+    width: 20px;
+  }
+`;
+
+const StyledMoon = styled(Moon)`
+  color: ${(props) => props.theme.colors.color};
+  margin-right: 0.5rem;
+  height: 16px;
+  cursor: pointer;
   width: 16px;
   @media (min-width: ${BREAKPOINTS.SMALL_DEVICES}) {
     margin-right: 1rem;
@@ -93,6 +105,9 @@ const StyledSun = styled(Sun)`
   }
 `;
 function HeaderLoggedinUser() {
+  const setIsDarkMode = useDarkMode((state) => state.setIsDarkMode);
+  const isDarkMode = useDarkMode((state) => state.isDarkMode);
+
   const history = useHistory();
   const setIsLoggedIn = useAuth((state) => state.setIsLoggedIn);
   const loggedUserQuery = useQuery("loggedUser", () => queries.loggedUser());
@@ -102,6 +117,9 @@ function HeaderLoggedinUser() {
     const token = null;
     history.push("/");
     setIsLoggedIn(false, token);
+  }
+  function onChange() {
+    setIsDarkMode(!isDarkMode);
   }
   return (
     <Wrapper>
@@ -115,8 +133,8 @@ function HeaderLoggedinUser() {
         <StyledLinks>
           <StyledLogOut onClick={() => logout()} />
         </StyledLinks>
-        <StyledLinks>
-          <StyledSun />
+        <StyledLinks onClick={onChange}>
+          {isDarkMode ? <StyledSun /> : <StyledMoon />}
         </StyledLinks>
       </Container>
     </Wrapper>

@@ -20,21 +20,21 @@ const Form = styled.div`
 `;
 const Logo = styled.div`
   font-size: 20px;
-  color: white;
+  color: #ee1144;
   font-weight: bold;
   margin-bottom: 2rem;
 `;
 const Caption = styled.div`
-  color: white;
+  color: ${(props) => props.theme.colors.color};
   margin-bottom: 2rem;
 `;
 const LoginButton = styled(NavLink)`
   margin-bottom: 1rem;
   height: 30px;
   text-decoration: none;
-  border: 1px solid #fff;
+  border: 1px solid ${(props) => props.theme.colors.border};
   border-radius: 4px;
-  color: #fff;
+  color: ${(props) => props.theme.colors.color};
   padding: 4px;
 `;
 
@@ -42,9 +42,9 @@ const SignupButton = styled(NavLink)`
   margin-bottom: 1rem;
   height: 30px;
   text-decoration: none;
-  background-color: white;
+  background-color: ${(props) => props.theme.colors.signupButtonColor};
   border-radius: 4px;
-  color: #2d3238;
+  color: ${(props) => props.theme.colors.signupButtonText};
   padding: 4px;
 `;
 function Home() {

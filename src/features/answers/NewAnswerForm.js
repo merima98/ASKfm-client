@@ -22,7 +22,7 @@ const Wrapper = styled.form`
 
 const Answer = styled.textarea`
   background-color: #021d2e;
-  border: 1px solid #12415c;
+  border: 1px solid ${(props) => props.theme.colors.border};
   outline: none;
   color: #fff;
   width: 100%;
@@ -34,7 +34,7 @@ const Answer = styled.textarea`
 const Button = styled.button`
   background-color: #021d2e;
   outline: none;
-  border: 1px solid #12415c;
+  border: 1px solid ${(props) => props.theme.colors.border};
   border-radius: 4px;
   color: #fff;
   padding-left: 8px;

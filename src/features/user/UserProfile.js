@@ -19,9 +19,9 @@ const Wrapper = styled.div`
   }
 `;
 const Container = styled.div`
-  background-color: #021d2e;
+  background-color: ${(props) => props.theme.colors.backgroundColor};
   padding: 10px;
-  border: 1px solid #12415c;
+  border: 1px solid ${(props) => props.theme.colors.border};
   border-radius: 4px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -33,11 +33,11 @@ const UserInformation = styled.div`
 const UsernameBig = styled.div`
   font-size: 20px;
   font-weight: bold;
-  color: #fff;
+  color: ${(props) => props.theme.colors.color};
 `;
 const UsernameSmall = styled.div`
   font-size: 12px;
-  color: #fff;
+  color: ${(props) => props.theme.colors.color};
 `;
 
 const Image = styled.img`

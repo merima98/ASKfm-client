@@ -4,7 +4,7 @@ import styled from "styled-components";
 const Container = styled.div`
   margin-bottom: 0.5rem;
   border-radius: 4px;
-  border: 1px solid #12415c;
+  border: 1px solid ${(props) => props.theme.colors.border};
   display: grid;
 `;
 const Question = styled.span`

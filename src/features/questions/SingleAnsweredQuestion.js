@@ -10,18 +10,17 @@ const Wrapper = styled.div`
   margin: 0 auto;
 `;
 const Container = styled.div`
-  background-color: #021d2e;
+  background-color: ${(props) => props.theme.colors.backgroundColor};
   margin-bottom: 1rem;
   border-radius: 4px;
-  border: 1px solid #12415c;
+  border: 1px solid ${(props) => props.theme.colors.border};
   display: grid;
 `;
 const Question = styled.span`
-  font-weight: bold;
   overflow-wrap: anywhere;
   padding: 20px;
-  color: #fff;
-  border-bottom: 1px solid #12415c;
+  color: ${(props) => props.theme.colors.color};
+  border-bottom: 1px solid ${(props) => props.theme.colors.border};
 `;
 const LikeContainer = styled.div`
   display: flex;
@@ -30,28 +29,28 @@ const LikeContainer = styled.div`
 `;
 
 const StyledThumbsUp = styled(ThumbsUp)`
-  color: #12415c;
+  color: ${(props) => props.theme.colors.likeColor};
   height: 16px;
   width: 16px;
   cursor: pointer;
 `;
 
 const StyledThumbsDown = styled(ThumbsDown)`
-  color: #12415c;
+  color: ${(props) => props.theme.colors.likeColor};
   height: 16px;
   width: 16px;
   cursor: pointer;
 `;
 
 const StyledMessageSquare = styled(MessageSquare)`
-  color: #12415c;
+  color: ${(props) => props.theme.colors.likeColor};
   height: 16px;
   width: 16px;
   cursor: pointer;
 `;
 
 const StyledPlus = styled(Plus)`
-  color: #12415c;
+  color: ${(props) => props.theme.colors.likeColor};
   height: 16px;
   width: 16px;
   cursor: pointer;
@@ -65,7 +64,11 @@ const Comment = styled.div`
   background-color: #021d2e;
   margin-bottom: 1rem;
   border-radius: 4px;
-  border: 1px solid #12415c;
+  border: 1px solid ${(props) => props.theme.colors.border};
+`;
+
+const LikeCount = styled.span`
+  color: ${(props) => props.theme.colors.likeColor};
 `;
 
 const Comments = styled.div`
@@ -102,11 +105,15 @@ function SingleAnsweredQuestion(props) {
         <Question>{question}</Question>
         <LikeContainer>
           <div>
-            <StyledNumber>{likeCount > 0 && likeCount}</StyledNumber>
+            <StyledNumber>
+              {likeCount > 0 && <LikeCount>{likeCount}</LikeCount>}
+            </StyledNumber>
             <StyledThumbsUp onClick={props.likeQuestion} />
           </div>
           <div>
-            <StyledNumber>{dislikeCount > 0 && dislikeCount}</StyledNumber>
+            <StyledNumber>
+              {dislikeCount > 0 && <LikeCount>{dislikeCount}</LikeCount>}
+            </StyledNumber>
             <StyledThumbsDown onClick={props.dislikeQuestion} />
           </div>
           <StyledMessageSquare onClick={() => handleShowComment()} />

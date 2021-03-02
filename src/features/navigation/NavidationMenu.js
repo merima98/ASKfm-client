@@ -14,11 +14,11 @@ const LeftSideContainer = styled.div`
   flex-direction: column;
   padding: 14px;
   text-align: center;
-  background-color: #021d2e;
+  background-color: ${(props) => props.theme.colors.backgroundColor};
   margin-bottom: 2rem;
-  border-bottom: 1px solid #12415c;
+  border-bottom: 1px solid ${(props) => props.theme.colors.border};
   @media (min-width: ${BREAKPOINTS.SMALL_DEVICES}) {
-    border-right: 1px solid #12415c;
+    border-right: 1px solid ${(props) => props.theme.colors.border};
     border-bottom: none;
     height: 100vh;
     position: sticky;
@@ -28,7 +28,7 @@ const LeftSideContainer = styled.div`
   }
 `;
 const Links = styled(NavLink)`
-  color: #fff;
+  color: ${(props) => props.theme.colors.color};
   text-decoration: none;
   margin-bottom: 0rem;
   font-size: 14px;
@@ -37,7 +37,7 @@ const Links = styled(NavLink)`
   }
 
   &.active {
-    color: #ff8c00;
+    color: ${(props) => props.theme.colors.activeLinks};
     font-weight: bold;
   }
 `;

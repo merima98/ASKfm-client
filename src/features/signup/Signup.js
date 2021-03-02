@@ -21,23 +21,26 @@ const Title = styled.div`
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 0.5rem;
+  color: ${(props) => props.theme.colors.color};
 `;
 
 const Description = styled.div`
   font-size: 10px;
   margin-bottom: 0.5rem;
+  color: ${(props) => props.theme.colors.color};
 `;
 const Link = styled(NavLink)`
   text-decoration: none;
   color: #ee1144;
 `;
 const Form = styled.form`
-  background-color: #fff;
+  background-color: ${(props) => props.theme.colors.backgroundColor};
   padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   border-radius: 4px;
+  border: 1px solid ${(props) => props.theme.colors.border};
 `;
 const ErrorMessage = styled.div`
   margin-bottom: 0.25rem;
@@ -49,6 +52,7 @@ const ErrorMessage = styled.div`
 `;
 const Label = styled.label`
   margin-bottom: 0.5rem;
+  color: ${(props) => props.theme.colors.color};
 `;
 const Input = styled.input`
   font-size: 14px;
@@ -56,7 +60,7 @@ const Input = styled.input`
   margin-bottom: 1rem;
   padding: 10px;
   border-radius: 2px;
-  border: 0.5px solid #d5d5dd;
+  border: 0.5px solid ${(props) => props.theme.colors.border};
   color: #d5d5dd;
 
   ${({ error }) =>
