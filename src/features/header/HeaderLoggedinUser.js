@@ -53,6 +53,10 @@ const StyledNavigationLinks = styled(NavLink)`
     height: 20px;
     width: 20px;
   }
+  &.active {
+    background-color: ${(props) => props.theme.colors.activeUserLink};
+    border-radius: 50%;
+  }
 `;
 
 const StyledUser = styled(User)`
@@ -60,6 +64,7 @@ const StyledUser = styled(User)`
   margin-right: 0.5rem;
   height: 16px;
   width: 16px;
+
   @media (min-width: ${BREAKPOINTS.SMALL_DEVICES}) {
     margin-right: 1rem;
     height: 20px;

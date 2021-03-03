@@ -11,6 +11,7 @@ export const darkTheme = {
     activeLinks: "#ff8c00",
     signupButtonColor: "#fff",
     signupButtonText: "#000",
+    activeUserLink: "#12415c",
   },
 };
 
@@ -27,5 +28,6 @@ export const lightTheme = {
     buttonBorder: "#0095f6",
     signupButtonColor: "#0095f6",
     signupButtonText: "#fff",
+    activeUserLink: "#add8e6",
   },
 };
