@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useQuery, useMutation } from "react-query";
+import { useHistory } from "react-router-dom";
 
 import queries from "../../api/queries";
 import mutations from "../../api/mutations";
@@ -47,10 +48,22 @@ const Image = styled.img`
     width: 50%;
   }
 `;
+const Button = styled.button`
+  background-color: ${(props) => props.theme.colors.buttonColor};
+  outline: none;
+  width: 70%;
+  overflow-wrap: anywhere;
+  border: 1px solid ${(props) => props.theme.colors.buttonBorder};
+  border-radius: 4px;
+  color: ${(props) => props.theme.colors.buttonText};
+  padding-left: 8px;
+  padding-right: 8px;
+  cursor: pointer;
+`;
 function UserProfile() {
   const loggedUserQuery = useQuery("loggedUser", () => queries.loggedUser());
   const loggedUser = loggedUserQuery.data?.data || {};
-
+  const history = useHistory();
   const userQuestionQuery = useQuery("userQuestion", () =>
     queries.userQuestionGet()
   );
@@ -134,6 +147,9 @@ function UserProfile() {
     return dislikeQuestionMutation.mutate(id);
   }
 
+  function showUpdatePage() {
+    history.push(`/update`);
+  }
   return (
     <div>
       <HeaderLoggedinUser />
@@ -143,6 +159,7 @@ function UserProfile() {
           <UserInformation>
             <UsernameSmall>@{loggedUser.username}</UsernameSmall>
             <UsernameBig>{loggedUser.username}</UsernameBig>
+            <Button onClick={() => showUpdatePage()}>Edit profile</Button>
           </UserInformation>
         </Container>
         <div>

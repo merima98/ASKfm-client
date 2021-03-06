@@ -23,6 +23,9 @@ function likeQuestion(questionId) {
 function dislikeQuestion(questionId) {
   return axios.post(`/dislike?questionId=${questionId}`);
 }
+function updateUser(values) {
+  return axios.patch(`/update`, values);
+}
 const exports = {
   signup,
   signin,
@@ -30,5 +33,6 @@ const exports = {
   createAnswer,
   likeQuestion,
   dislikeQuestion,
+  updateUser,
 };
 export default exports;
