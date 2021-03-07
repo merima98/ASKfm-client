@@ -86,15 +86,14 @@ function UpdateUserProfile() {
       history.push(`/user/${data.data.username}`);
       return queryClient.refetchQueries("loggedUser");
     },
+    onError: (data) => {
+      formik.setErrors({ username: "Username already in use! " });
+    },
   });
-  async function onSubmit(values) {
+  function onSubmit(values) {
     try {
       updateUserMutation.mutate(values);
-    } catch (err) {
-      if (err.response.data.exception === "UsernameAllreadyInUseException") {
-        formik.setErrors({ username: "Username already in use!" });
-      }
-    }
+    } catch (err) {}
   }
   const formik = useFormik({
     initialValues: {
