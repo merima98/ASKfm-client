@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { ThumbsUp, ThumbsDown, MessageSquare, Plus } from "react-feather";
+import {
+  ThumbsUp,
+  ThumbsDown,
+  MessageSquare,
+  Plus,
+  Heart,
+} from "react-feather";
 
 import NewAnswerForm from "../answers/NewAnswerForm";
 import Answers from "../answers/Answers";
@@ -55,6 +61,13 @@ const StyledPlus = styled(Plus)`
   width: 16px;
   cursor: pointer;
 `;
+
+const StyledHeart = styled(Heart)`
+  color: ${(props) => props.theme.colors.likeColor};
+  height: 16px;
+  width: 16px;
+  cursor: pointer;
+`;
 const StyledNumber = styled.span`
   color: #fff;
   font-size: 12px;
@@ -82,10 +95,12 @@ function SingleAnsweredQuestion(props) {
     question,
     likeCount,
     dislikeCount,
+    rateQuestion,
     id,
     answersCount,
     answers,
     fullWidth,
+    totalHearts,
   } = props;
 
   const [showComments, setShowComments] = useState(false);
@@ -115,6 +130,12 @@ function SingleAnsweredQuestion(props) {
               {dislikeCount > 0 && <LikeCount>{dislikeCount}</LikeCount>}
             </StyledNumber>
             <StyledThumbsDown onClick={props.dislikeQuestion} />
+          </div>
+          <div>
+            <StyledNumber>
+              {totalHearts > 0 && <LikeCount>{totalHearts}</LikeCount>}
+            </StyledNumber>
+            <StyledHeart onClick={rateQuestion} />
           </div>
           <StyledMessageSquare onClick={() => handleShowComment()} />
           {answersCount > 0 && (

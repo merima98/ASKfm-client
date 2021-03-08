@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useLocation } from "react-router-dom";
 
 import HeaderLoggedinUser from "../header/HeaderLoggedinUser";
@@ -28,10 +28,16 @@ const RightSideContainer = styled.div`
 `;
 
 function AnsweredQuestions() {
-  const { data } = useQuery("questions", () => queries.questions());
-  const questions = data ? data.data : [];
-
+  const queryClient = useQueryClient();
   const location = useLocation();
+
+  const { data } = useQuery(
+    "questions",
+    location.pathname === "/"
+      ? () => queries.hotestQuestions()
+      : () => queries.questions()
+  );
+  const questions = data ? data.data : [];
 
   const likeQuestionMutation = useMutation(mutations.likeQuestion, {
     onSuccess: (data) => {
@@ -70,6 +76,15 @@ function AnsweredQuestions() {
 
   async function handleOnLike(id) {
     return likeQuestionMutation.mutate(id);
+  }
+
+  const rateQuestionMutation = useMutation(mutations.rate, {
+    onSuccess: (data) => {
+      return queryClient.invalidateQueries("questions");
+    },
+  });
+  async function handleOnRateQuestion(id) {
+    return rateQuestionMutation.mutate(id);
   }
 
   const dislikeQuestionMutation = useMutation(mutations.dislikeQuestion, {
@@ -125,10 +140,12 @@ function AnsweredQuestions() {
                     key={question.id}
                     id={question.id}
                     question={question.content}
+                    totalHearts={question.totalHearts}
                     likeCount={question.likes.length}
                     dislikeCount={question.Dislikes.length}
                     likeQuestion={() => handleOnLike(question.id)}
                     dislikeQuestion={() => handleOnDislike(question.id)}
+                    rateQuestion={() => handleOnRateQuestion(question.id)}
                     answersCount={question.Answer.length}
                     answers={question.Answer}
                     fullWidth={false}
