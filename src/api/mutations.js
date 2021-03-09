@@ -15,7 +15,14 @@ function createQuestion(values) {
 function rate(questionId) {
   return axios.patch(`/rate?questionId=${questionId}`);
 }
-
+const headers = {
+  "Content-Type": "application/json",
+};
+function payment(values) {
+  return axios.post(`/payment`, values, {
+    headers: headers,
+  });
+}
 function createAnswer(values) {
   return axios.post("/answerAdd", values);
 }
@@ -30,6 +37,7 @@ function dislikeQuestion(questionId) {
 function updateUser(values) {
   return axios.patch(`/update`, values);
 }
+
 const exports = {
   signup,
   signin,
@@ -39,5 +47,6 @@ const exports = {
   likeQuestion,
   dislikeQuestion,
   updateUser,
+  payment,
 };
 export default exports;

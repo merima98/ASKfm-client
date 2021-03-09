@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useMutation, useQueryClient } from "react-query";
+
+import StripeCheckout from "react-stripe-checkout";
+import mutations from "../../api/mutations";
+
 import {
   ThumbsUp,
   ThumbsDown,
@@ -95,16 +100,21 @@ function SingleAnsweredQuestion(props) {
     question,
     likeCount,
     dislikeCount,
-    rateQuestion,
     id,
     answersCount,
     answers,
     fullWidth,
     totalHearts,
   } = props;
+  const queryClient = useQueryClient();
 
   const [showComments, setShowComments] = useState(false);
   const [showAnsweredComments, setShowAnsweredComments] = useState(false);
+  const [questionState, setQuestion] = useState({
+    name: `${question}`,
+    price: 10,
+    questionBy: `${question}`,
+  });
 
   function handleShowComment() {
     setShowComments(!showComments);
@@ -113,6 +123,25 @@ function SingleAnsweredQuestion(props) {
   function handleShowAnsweredComment() {
     setShowAnsweredComments(!showAnsweredComments);
   }
+
+  const rateQuestionMutation = useMutation(mutations.rate, {
+    onSuccess: (data) => {
+      return queryClient.invalidateQueries("questions");
+    },
+  });
+  async function handleOnRateQuestion(id) {
+    return rateQuestionMutation.mutate(id);
+  }
+
+  const makePayment = async (token, id) => {
+    try {
+      const body = {
+        token,
+        questionState,
+      };
+      await mutations.payment(body);
+    } catch (err) {}
+  };
 
   return (
     <Wrapper width={fullWidth.toString()}>
@@ -131,11 +160,19 @@ function SingleAnsweredQuestion(props) {
             </StyledNumber>
             <StyledThumbsDown onClick={props.dislikeQuestion} />
           </div>
+
           <div>
-            <StyledNumber>
-              {totalHearts > 0 && <LikeCount>{totalHearts}</LikeCount>}
-            </StyledNumber>
-            <StyledHeart onClick={rateQuestion} />
+            <StripeCheckout
+              stripeKey={process.env.REACT_APP_STRIPE_KEY}
+              token={(token, id) => makePayment(token, id)}
+              name="Give Heart to this Question"
+              amount={questionState.price * 100}
+            >
+              <StyledNumber>
+                {totalHearts > 0 && <LikeCount>{totalHearts}</LikeCount>}
+              </StyledNumber>
+              <StyledHeart onClick={() => handleOnRateQuestion(id)} />
+            </StripeCheckout>
           </div>
           <StyledMessageSquare onClick={() => handleShowComment()} />
           {answersCount > 0 && (
