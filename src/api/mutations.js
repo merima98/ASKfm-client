@@ -15,13 +15,9 @@ function createQuestion(values) {
 function rate(questionId) {
   return axios.patch(`/rate?questionId=${questionId}`);
 }
-const headers = {
-  "Content-Type": "application/json",
-};
+
 function payment(values) {
-  return axios.post(`/payment`, values, {
-    headers: headers,
-  });
+  return axios.post(`/payment`, values);
 }
 function createAnswer(values) {
   return axios.post("/answerAdd", values);

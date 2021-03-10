@@ -133,13 +133,20 @@ function SingleAnsweredQuestion(props) {
     return rateQuestionMutation.mutate(id);
   }
 
-  const makePayment = async (token, id) => {
+  const makePaymentMutation = useMutation(mutations.payment, {
+    onMutate: (data) => {
+      return handleOnRateQuestion(data.id);
+    },
+  });
+
+  const makePayment = (token) => {
     try {
       const body = {
         token,
         questionState,
+        id,
       };
-      await mutations.payment(body);
+      makePaymentMutation.mutate(body);
     } catch (err) {}
   };
 
@@ -164,14 +171,14 @@ function SingleAnsweredQuestion(props) {
           <div>
             <StripeCheckout
               stripeKey={process.env.REACT_APP_STRIPE_KEY}
-              token={(token, id) => makePayment(token, id)}
+              token={(token) => makePayment(token)}
               name="Give Heart to this Question"
               amount={questionState.price * 100}
             >
               <StyledNumber>
                 {totalHearts > 0 && <LikeCount>{totalHearts}</LikeCount>}
               </StyledNumber>
-              <StyledHeart onClick={() => handleOnRateQuestion(id)} />
+              <StyledHeart />
             </StripeCheckout>
           </div>
           <StyledMessageSquare onClick={() => handleShowComment()} />
