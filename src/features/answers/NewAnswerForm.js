@@ -15,26 +15,31 @@ const validationSchema = Yup.object().shape({
 
 const Wrapper = styled.form`
   padding: 10px;
-  border-top: none;
+  border: none;
   width: 100%;
   margin: 0 auto;
+  background-color: ${(props) => props.theme.colors.backgroundColorDarker};
 `;
 
 const Answer = styled.textarea`
-  background-color: #021d2e;
-  border: 1px solid ${(props) => props.theme.colors.border};
+  background-color: ${(props) => props.theme.colors.backgroundColorDarker};
   outline: none;
   color: #fff;
   width: 100%;
   resize: none;
   overflow-wrap: anywhere;
   border: none;
+  font-family: "Segoe UI";
+  ::placeholder {
+    color: ${(props) => props.theme.colors.activeLinks};
+    font-family: "Segoe UI";
+  }
 `;
 
 const Button = styled.button`
-  background-color: #021d2e;
+  background-color: ${(props) => props.theme.colors.buttonColor};
   outline: none;
-  border: 1px solid ${(props) => props.theme.colors.border};
+  border: 1px solid ${(props) => props.theme.colors.buttonBorder};
   border-radius: 4px;
   color: #fff;
   padding-left: 8px;

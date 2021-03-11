@@ -79,7 +79,6 @@ const StyledNumber = styled.span`
 `;
 const Comment = styled.div`
   display: ${(props) => (props.visible ? "flex" : "none")};
-  background-color: #021d2e;
   margin-bottom: 1rem;
   border-radius: 4px;
   border: 1px solid ${(props) => props.theme.colors.border};
