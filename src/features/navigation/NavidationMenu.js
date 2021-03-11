@@ -2,9 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { useQuery } from "react-query";
+import { useTranslation } from "react-i18next";
 
 import { BREAKPOINTS } from "../../constants";
 import queries from "../../api/queries";
+import LanguageForm from "../languageForm/LanguageForm";
 
 const LeftSideContainer = styled.div`
   position: sticky;
@@ -43,6 +45,7 @@ const Links = styled(NavLink)`
 `;
 
 function NavidationMenu() {
+  const { t } = useTranslation();
   const loggedUserQuery = useQuery("loggedUser", () => queries.loggedUser());
   const user = loggedUserQuery.data?.data || {};
   return (
@@ -56,6 +59,7 @@ function NavidationMenu() {
       <Links exact to={`/user/${user.username}`}>
         My Questions
       </Links>
+      <LanguageForm />
     </LeftSideContainer>
   );
 }

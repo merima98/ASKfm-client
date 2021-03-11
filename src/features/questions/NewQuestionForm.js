@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useTranslation } from "react-i18next";
 import { useQueryClient, useMutation } from "react-query";
 
 import { BREAKPOINTS } from "../../constants";
@@ -60,6 +61,7 @@ const validationSchema = Yup.object().shape({
     .required("This field is required!"),
 });
 function NewQuestionForm() {
+  const { t } = useTranslation();
   const formik = useFormik({
     initialValues: {
       content: "",
@@ -85,7 +87,7 @@ function NewQuestionForm() {
   return (
     <Wrapper onSubmit={formik.handleSubmit}>
       <TeaxArea
-        placeholder="What, when, why... ask"
+        placeholder={`${t("What, when, why... ask")}`}
         name="content"
         onChange={formik.handleChange}
         value={formik.values.content}
