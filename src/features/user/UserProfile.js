@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useQuery, useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import queries from "../../api/queries";
 import mutations from "../../api/mutations";
@@ -61,6 +62,7 @@ const Button = styled.button`
   cursor: pointer;
 `;
 function UserProfile() {
+  const { t } = useTranslation();
   const loggedUserQuery = useQuery("loggedUser", () => queries.loggedUser());
   const loggedUser = loggedUserQuery.data?.data || {};
   const history = useHistory();
@@ -159,7 +161,9 @@ function UserProfile() {
           <UserInformation>
             <UsernameSmall>@{loggedUser.username}</UsernameSmall>
             <UsernameBig>{loggedUser.username}</UsernameBig>
-            <Button onClick={() => showUpdatePage()}>Edit profile</Button>
+            <Button onClick={() => showUpdatePage()}>
+              {`${t("Edit profile")}`}
+            </Button>
           </UserInformation>
         </Container>
         <div>

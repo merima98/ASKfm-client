@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useTranslation } from "react-i18next";
 import { useQueryClient, useMutation } from "react-query";
 
 import mutations from "../../api/mutations";
@@ -58,6 +59,7 @@ const ErrorMessage = styled.div`
 
 function NewAnswerForm(props) {
   const { id } = props;
+  const { t } = useTranslation();
 
   const formik = useFormik({
     initialValues: {
@@ -90,7 +92,7 @@ function NewAnswerForm(props) {
         hidden
       />
       <Answer
-        placeholder="Leave your comment..."
+        placeholder={`${t("Leave your comment...")}`}
         name="content"
         onChange={formik.handleChange}
         value={formik.values.content}
@@ -98,7 +100,7 @@ function NewAnswerForm(props) {
       {formik.errors.content ? (
         <ErrorMessage>{formik.errors.content}</ErrorMessage>
       ) : null}
-      <Button type="submit">Answer</Button>
+      <Button type="submit">{`${t("Answer")}`}</Button>
     </Wrapper>
   );
 }

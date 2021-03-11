@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useFormik } from "formik";
 import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
+import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 
 import { BREAKPOINTS } from "../../constants";
@@ -76,6 +77,7 @@ const validationSchema = Yup.object().shape({
   image: Yup.string().required("Paste URL!"),
 });
 function UpdateUserProfile() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const history = useHistory();
   const loggedUserQuery = useQuery("loggedUser", () => queries.loggedUser());
@@ -127,7 +129,7 @@ function UpdateUserProfile() {
             <ErrorMessage>{formik.errors.image}</ErrorMessage>
           ) : null}
           <Button disabled={!(formik.isValid && formik.dirty)} type="submit">
-            Update
+            {`${t("Update")}`}
           </Button>
         </Form>
       </Wrapper>

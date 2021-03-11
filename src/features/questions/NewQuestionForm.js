@@ -95,7 +95,7 @@ function NewQuestionForm() {
       {formik.errors.content ? (
         <ErrorMessage>{formik.errors.content}</ErrorMessage>
       ) : null}
-      <Button type="submit">Ask</Button>
+      <Button type="submit">{`${t("Ask")}`}</Button>
     </Wrapper>
   );
 }

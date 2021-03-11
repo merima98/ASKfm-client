@@ -51,13 +51,13 @@ function NavidationMenu() {
   return (
     <LeftSideContainer>
       <Links exact to="/latest">
-        Latest
+        {`${t("Latest")}`}
       </Links>
       <Links exact to="/">
-        Hot Questions
+        {`${t("Hot Questions")}`}
       </Links>
       <Links exact to={`/user/${user.username}`}>
-        My Questions
+        {`${t("My Questions")}`}
       </Links>
       <LanguageForm />
     </LeftSideContainer>
