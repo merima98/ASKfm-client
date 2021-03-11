@@ -29,6 +29,11 @@ const TeaxArea = styled.textarea`
   resize: none;
   overflow-wrap: anywhere;
   border: none;
+  font-family: "Segoe UI";
+  ::placeholder {
+    color: ${(props) => props.theme.colors.activeLinks};
+    font-family: "Segoe UI";
+  }
 `;
 const Button = styled.button`
   background-color: ${(props) => props.theme.colors.buttonColor};
@@ -80,7 +85,7 @@ function NewQuestionForm() {
   return (
     <Wrapper onSubmit={formik.handleSubmit}>
       <TeaxArea
-        placeholder="What, when, why...ask"
+        placeholder="What, when, why... ask"
         name="content"
         onChange={formik.handleChange}
         value={formik.values.content}
