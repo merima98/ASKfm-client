@@ -109,6 +109,9 @@ const StyledMoon = styled(Moon)`
     width: 20px;
   }
 `;
+function goToTheTop() {
+  window.scrollTo(0, 0);
+}
 function HeaderLoggedinUser() {
   const setIsDarkMode = useDarkMode((state) => state.setIsDarkMode);
   const isDarkMode = useDarkMode((state) => state.isDarkMode);
@@ -128,7 +131,7 @@ function HeaderLoggedinUser() {
   }
   return (
     <Wrapper>
-      <Logo exact to="/">
+      <Logo exact to="/" onClick={() => goToTheTop()}>
         ASK.me
       </Logo>
       <Container>
